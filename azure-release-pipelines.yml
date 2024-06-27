@@ -1,0 +1,128 @@
+trigger: none
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+# steps:
+# - task: UseJava@1
+#   inputs:
+#     versionSpec: '11'
+#     jdkArchitectureOption: 'x64'
+#     jdkSourceOption: 'PreInstalled'
+#     jdkVersionOption: '11'
+#     checkLatest: true
+
+# - task: Docker@2
+#   inputs:
+#     command: 'buildAndPush'
+#     repository: 'your-docker-repository'
+#     dockerfile: '**/Dockerfile'
+#     containerRegistry: 'ForzaDockerRegistryConnection'
+#     tags: |
+#       $(Build.BuildId)
+
+# - task: PublishBuildArtifacts@1
+#   inputs:
+#     pathToPublish: '$(Build.ArtifactStagingDirectory)'
+#     artifactName: 'drop'
+#     publishLocation: 'Container'
+
+# - task: DownloadPipelineArtifact@2
+#   inputs:
+#     buildType: 'current'
+#     targetPath: '$(Pipeline.Workspace)'
+
+stages:
+  - stage: Dev
+    jobs:
+      - job: DeployToDev
+        steps:
+          # - task: DownloadPipelineArtifact@2
+          #   inputs:
+          #     buildType: 'current'
+          #     targetPath: '$(Pipeline.Workspace)'
+
+          - task: TerraformInstaller@2
+            inputs:
+              terraformVersion: 'latest'
+
+          - task: TerraformCLI@2
+            inputs:
+              command: 'init'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/Infra-Folder'
+              backendType: 'azurerm'
+              backendServiceArm: 'ForzaAzureRMConnection'
+              backendAzureRmResourceGroupName: 'ForzaResourceGroup'
+              backendAzureRmResourceGroupLocation: 'eastus'
+              backendAzureRmStorageAccountName: 'devopstfjava'
+              backendAzureRmContainerName: 'forzaaksjavadevops'
+              backendAzureRmKey: 'terraform.tfstate'
+              allowTelemetryCollection: false
+
+          - task: TerraformCLI@2
+            inputs:
+              command: 'plan'
+              environmentServiceName: 'ForzaAzureRMConnection'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/Infra-Folder'
+              runAzLogin: true
+              allowTelemetryCollection: false
+              
+          - task: TerraformCLI@2
+            inputs:
+              command: 'apply'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/Infra-Folder'
+              environmentServiceName: 'ForzaAzureRMConnection'
+              allowTelemetryCollection: false
+
+          - task: KubernetesManifest@1
+            inputs:
+              action: 'deploy'
+              connectionType: 'azureResourceManager'
+              azureSubscriptionConnection: 'ForzaAzureRMConnection'
+              azureResourceGroup: 'ForzaResourceGroup-java'
+              kubernetesCluster: 'ForzaAKSCluster-java'
+              useClusterAdmin: true
+              manifests: '$(System.DefaultWorkingDirectory)/Infra-Folder/deployment.yaml'
+
+
+          # - task: Kubernetes@1
+          #   inputs:
+          #     connectionType: 'Azure Resource Manager'
+          #     azureSubscriptionEndpoint: 'ForzaAzureRMConnection'
+          #     namespace: 'dev'
+          #     command: 'apply'
+          #     useConfigurationFile: true
+          #     configurationType: 'yaml'
+          #     configuration: '$(Pipeline.Workspace)/Infra-Folder/deployment.yaml'
+          #   displayName: 'Deploy to Kubernetes'
+
+  # - stage: Prod
+  #   jobs:
+  #     - job: DeployToProd
+  #       environment: 'Production'
+  #       steps:
+  #         - task: DownloadPipelineArtifact@2
+  #           inputs:
+  #             buildType: 'current'
+  #             targetPath: '$(Pipeline.Workspace)'
+
+  #         - task: TerraformInstaller@0
+  #           inputs:
+  #             terraformVersion: '0.14.5'
+
+  #         - script: |
+  #             terraform init
+  #             terraform apply -auto-approve
+  #           workingDirectory: Infra-Folder
+  #           displayName: 'Provision Infrastructure'
+
+  #         - task: Kubernetes@1
+  #           inputs:
+  #             connectionType: 'Azure Resource Manager'
+  #             azureSubscriptionEndpoint: 'ForzaAzureRMConnection'
+  #             namespace: 'prod'
+  #             command: 'apply'
+  #             useConfigurationFile: true
+  #             configurationType: 'yaml'
+  #             configuration: '$(Pipeline.Workspace)/Infra-Folder/deployment.yaml'
+  #           displayName: 'Deploy to Kubernetes'
