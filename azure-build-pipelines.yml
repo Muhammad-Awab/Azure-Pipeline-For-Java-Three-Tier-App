@@ -36,13 +36,13 @@ steps:
 - task: PublishPipelineArtifact@1
   inputs:
     targetPath: '$(System.DefaultWorkingDirectory)/target/spring-boot-docker-complete-0.0.1-SNAPSHOT.jar'
-    artifactName: 'forza-java-webapp'
+    artifactName: 'ForzaCapstone-java-webapp'
     publishLocation: 'pipeline'
 
 - task: Docker@2
   inputs:
     containerRegistry: 'ForzaDockerRegistryConnection'
-    repository: 'stforza/java-webapp'
+    repository: 'forzacapstoneacrjavaapp.azurecr.io'
     command: 'buildAndPush'
     Dockerfile: '**/Dockerfile'
     buildContext: '$(Build.SourcesDirectory)'

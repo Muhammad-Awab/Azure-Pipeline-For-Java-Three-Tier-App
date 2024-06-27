@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: java-webapp
-        image: stforza/java-webapp:310
+        image: forzacapstoneacrjavaapp.azurecr.io
         ports:
         - containerPort: 8080
 ---

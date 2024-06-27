@@ -52,10 +52,10 @@ stages:
               workingDirectory: '$(System.DefaultWorkingDirectory)/Infra-Folder'
               backendType: 'azurerm'
               backendServiceArm: 'ForzaAzureRMConnection'
-              backendAzureRmResourceGroupName: 'ForzaResourceGroup'
+              backendAzureRmResourceGroupName: 'ForzaCapstoneResourceGroup'
               backendAzureRmResourceGroupLocation: 'eastus'
               backendAzureRmStorageAccountName: 'devopstfjava'
-              backendAzureRmContainerName: 'forzaaksjavadevops'
+              backendAzureRmContainerName: 'ForzaCapstoneaksjavadevops'
               backendAzureRmKey: 'terraform.tfstate'
               allowTelemetryCollection: false
 
@@ -79,8 +79,8 @@ stages:
               action: 'deploy'
               connectionType: 'azureResourceManager'
               azureSubscriptionConnection: 'ForzaAzureRMConnection'
-              azureResourceGroup: 'ForzaResourceGroup-java'
-              kubernetesCluster: 'ForzaAKSCluster-java'
+              azureResourceGroup: 'ForzaCapstoneResourceGroup-java'
+              kubernetesCluster: 'ForzaCapstoneAKSCluster-java'
               useClusterAdmin: true
               manifests: '$(System.DefaultWorkingDirectory)/Infra-Folder/deployment.yaml'
 
