@@ -1,0 +1,23 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: testLatticeApp
+  datasource:
+    url: jdbc:sqlserver://forzatechdb.database.windows.net:1433;database=forzatech
+    username: forzatech_db
+    password: N46g8aNQz5YaJD4
+  profiles:
+    active: dev
+
+ribbon:
+  ServerListRefreshInterval: 1000
+
+endpoints:
+  health:
+    sensitive: false
+  restart:
+    enabled: true
+  shutdown:
+    enabled: true

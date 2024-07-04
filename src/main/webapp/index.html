@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forza's Haute Cuisine Restaurant, Manhattan, NY</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .hero {
+            background: url('images/restaurant.jpg') no-repeat center center;
+            background-size: cover;
+            height: 75vh;
+            color: white;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .hero h1 {
+            font-size: 4rem;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+        }
+        .navbar-nav .nav-item .nav-link {
+            color: white !important;
+        }
+        .food-item {
+            text-align: center;
+        }
+        .food-item img {
+            width: 100%;
+            height: auto;
+        }
+        .food-category {
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .footer {
+            background: #343a40;
+            color: white;
+            padding: 20px 0;
+        }
+        .section {
+            padding: 60px 0;
+        }
+        .section h2 {
+            margin-bottom: 40px;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">Forza's Haute Cuisine</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="#home">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#menu">Menu</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#about">About Us</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#contact">Contact</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#order">Order Now</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div id="home" class="hero section">
+    <h1>Welcome to Forza's Haute Cuisine</h1>
+    <h2>4000 Central Park South, Manhattan, NY</h2>
+</div>
+
+<div id="menu" class="container section">
+    <h2 class="text-center">Menu</h2>
+    <div class="row">
+        <div class="col-md-4">
+            <h3 class="food-category">Appetizers</h3>
+            <ul class="list-group">
+                <li class="list-group-item food-item">
+                    <img src="images/Brushetta.jpg" alt="Bruschetta">
+                    <div>Bruschetta</div>
+                </li>
+                <li class="list-group-item food-item">
+                    <img src="images/Stuffed Mushrooms.jpg" alt="Stuffed Mushrooms">
+                    <div>Stuffed Mushrooms</div>
+                </li>
+                <li class="list-group-item food-item">
+                    <img src="images/Garlic Bread.jpg" alt="Garlic Bread">
+                    <div>Garlic Bread</div>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-4">
+            <h3 class="food-category">Main Courses</h3>
+            <ul class="list-group">
+                <li class="list-group-item food-item">
+                    <img src="images/Grilled Salmon.jpg" alt="Grilled Salmon">
+                    <div>Grilled Salmon</div>
+                </li>
+                <li class="list-group-item food-item">
+                    <img src="images/Spaghetti Carbonara.jpg" alt="Spaghetti Carbonara">
+                    <div>Spaghetti Carbonara</div>
+                </li>
+                <li class="list-group-item food-item">
+                    <img src="images/Chicken Parmesan.jpg" alt="Chicken Parmesan">
+                    <div>Chicken Parmesan</div>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-4">
+            <h3 class="food-category">Desserts</h3>
+            <ul class="list-group">
+                <li class="list-group-item food-item">
+                    <img src="images/Tiramisu.jpg" alt="Tiramisu">
+                    <div>Tiramisu</div>
+                </li>
+                <li class="list-group-item food-item">
+                    <img src="images/Cheesecake.jpg" alt="Cheesecake">
+                    <div>Cheesecake</div>
+                </li>
+                <li class="list-group-item food-item">
+                    <img src="images/Panna Cotta.jpg" alt="Panna Cotta">
+                    <div>Panna Cotta</div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div id="about" class="container section">
+    <h2 class="text-center">About Us</h2>
+    <p>Welcome to Forza's Haute Cuisine, the premier fine dining restaurant located at 4000 Central Park South in the heart of Manhattan. Our restaurant is renowned for its exquisite cuisine, elegant ambiance, and exceptional service. At Forza's Haute Cuisine, we take pride in using the finest ingredients to create a diverse menu that caters to all tastes. Whether you are here for a romantic dinner, a business meeting, or a special celebration, our dedicated team is here to ensure you have an unforgettable dining experience.</p>
+</div>
+
+<div id="contact" class="container section">
+    <h2 class="text-center">Contact Us</h2>
+    <p class="text-center">We'd love to hear from you! Please reach out with any questions, reservations, or feedback.</p>
+    <div class="row">
+        <div class="col-md-6">
+            <h4>Address</h4>
+            <p>4000 Central Park South, Manhattan, NY</p>
+        </div>
+        <div class="col-md-6">
+            <h4>Contact Information</h4>
+            <p>Phone: (212) 555-1234</p>
+            <p>Email: reservations@forzashautecuisine.com</p>
+        </div>
+    </div>
+</div>
+
+<div id="order" class="container section">
+    <h2 class="text-center">Order Now</h2>
+    <form action="order" method="post">
+        <div class="form-group">
+            <label for="name">Your Name</label>
+            <input type="text" class="form-control" id="name" name="name" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Your Email</label>
+            <input type="email" class="form-control" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+            <label for="menu-item">Select Menu Item</label>
+            <select class="form-control" id="menu-item" name="menu-item" required>
+                <option value="Bruschetta">Bruschetta</option>
+                <option value="Stuffed Mushrooms">Stuffed Mushrooms</option>
+                <option value="Garlic Bread">Garlic Bread</option>
+                <option value="Grilled Salmon">Grilled Salmon</option>
+                <option value="Spaghetti Carbonara">Spaghetti Carbonara</option>
+                <option value="Chicken Parmesan">Chicken Parmesan</option>
+                <option value="Tiramisu">Tiramisu</option>
+                <option value="Cheesecake">Cheesecake</option>
+                <option value="Panna Cotta">Panna Cotta</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Place Order</button>
+    </form>
+</div>
+
+<footer class="footer text-center">
+    <div class="container">
+        <p>&copy; 2024 Forza's Haute Cuisine Restaurant, Manhattan, NY. All rights reserved.</p>
+    </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

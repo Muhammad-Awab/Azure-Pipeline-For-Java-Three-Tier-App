@@ -1,0 +1,15 @@
+{
+  "name": "ForzaDockerRegistryConnection",
+  "type": "dockerregistry",
+  "url": "https://index.docker.io/v1/",
+  "authorization": {
+    "scheme": "UsernamePassword",
+    "parameters": {
+      "username": "stforza",
+      "password": "ExpressNow325#"
+    }
+  },
+  "data": {
+    "registrytype": "Others"
+  }
+}

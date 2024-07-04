@@ -1,0 +1,124 @@
+trigger:
+- master
+
+resources:
+- repo: self
+
+variables:
+  dockerRegistryServiceConnection: '140c7113-db46-417a-8ed7-c019ced14ba0'
+  imageRepository: 'azurecapstone'
+  containerRegistry: 'forzacapstondockerregistryconnection.azurecr.io'
+  dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
+  tag: '$(Build.BuildId)'
+
+  vmImageName: 'ubuntu-latest'
+
+stages:
+- stage: Build
+  displayName: Build and push stage
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    - checkout: self
+      fetchDepth: 0
+
+    - script: |
+        echo "Cleaning workspace..."
+        git clean -fdx
+      displayName: 'Clean Workspace'
+
+    - script: |
+        echo "Listing source directory contents"
+        ls -la $(Build.SourcesDirectory)
+      displayName: 'List source directory contents'
+
+    - script: |
+        echo "Printing git log"
+        git log -n 5
+      displayName: 'Print git log'
+
+    - task: Maven@3
+      inputs:
+        mavenPomFile: 'pom.xml'
+        mavenOptions: '-Xmx3072m'
+        javaHomeOption: 'JDKVersion'
+        jdkVersionOption: '1.17'
+        jdkArchitectureOption: 'x64'
+        publishJUnitResults: true
+        testResultsFiles: '/surefire-reports/TEST-*.xml'
+        goals: 'clean package -Dmaven.test.skip=true'
+        
+    - task: Docker@2
+      displayName: Build and push an image to container registry
+      inputs:
+        command: buildAndPush
+        repository: $(imageRepository)
+        dockerfile: $(dockerfilePath)
+        containerRegistry: $(dockerRegistryServiceConnection)
+        tags: |
+          $(tag)
+    
+  - job: waitForValidation
+    displayName: Wait for external validation  
+    pool: server    
+    timeoutInMinutes: 4320 # job times out in 3 days
+    steps:   
+    - task: ManualValidation@0
+      timeoutInMinutes: 1440 # task times out in 1 day
+      inputs:
+        notifyUsers: |
+          stsamdc@hotmail.com
+        instructions: 'Please validate the build configuration and resume'
+        onTimeout: 'resume'
+- stage: Prod
+  displayName: Prod
+  jobs:
+  - job: DeployToProd
+    displayName: Deploy to Prod
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    - task: TerraformInstaller@2
+      inputs:
+        terraformVersion: 'latest'
+
+    - task: TerraformCLI@2
+      inputs:
+        command: 'init'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/Infra-Folder'
+        backendType: 'azurerm'
+        backendServiceArm: 'ForzaAzureRMConnection'
+        backendAzureRmResourceGroupName: 'ForzaCapstoneResourceGroup'
+        backendAzureRmResourceGroupLocation: 'eastus'
+        backendAzureRmStorageAccountName: 'forzadevopstfjava'
+        backendAzureRmContainerName: 'forzacapstoneaksjavadevops'
+        backendAzureRmKey: 'terraform.tfstate'
+        allowTelemetryCollection: false
+
+    - task: TerraformCLI@2
+      inputs:
+        command: 'plan'
+        environmentServiceName: 'ForzaAzureRMConnection'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/Infra-Folder'
+        runAzLogin: true
+        allowTelemetryCollection: false
+              
+    - task: TerraformCLI@2
+      inputs:
+        command: 'apply'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/Infra-Folder'
+        environmentServiceName: 'ForzaAzureRMConnection'
+        allowTelemetryCollection: false
+
+    - task: KubernetesManifest@1
+      inputs:
+        action: 'deploy'
+        connectionType: 'azureResourceManager'
+        azureSubscriptionConnection: 'ForzaAzureRMConnection'
+        azureResourceGroup: 'ForzaCapstoneResourceGroup'
+        kubernetesCluster: 'ForzaCapstoneAKSCluster-java'
+        useClusterAdmin: true
+        manifests: '$(System.DefaultWorkingDirectory)/Infra-Folder/deployment.yaml'
