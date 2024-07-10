@@ -10,6 +10,11 @@ variables:
   containerRegistry: 'forzacapstondockerregistryconnection.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
   tag: '$(Build.BuildId)'
+  # SonarQube variables
+  sonarProjectKey: 'forza-prod'
+  sonarProjectName: 'forza-prod'
+  sonarProjectVersion: '$(Build.BuildId)'
+  sonarQubeServiceEndpoint: 'sonar-connection'
 
   vmImageName: 'ubuntu-latest'
 
@@ -50,6 +55,28 @@ stages:
         publishJUnitResults: true
         testResultsFiles: '/surefire-reports/TEST-*.xml'
         goals: 'clean package -Dmaven.test.skip=true'
+      
+    - task: SonarQubePrepare@5
+      displayName: SonarQube Scan
+      inputs:
+        SonarQube: $(sonarQubeServiceEndpoint)
+        scannerMode: 'CLI'
+        configMode: 'manual'
+        cliProjectKey: $(sonarProjectKey)
+        cliProjectName: $(sonarProjectName)
+        cliProjectVersion: $(sonarProjectVersion)
+        extraProperties: |
+          sonar.projectKey=$(sonarProjectKey)
+          sonar.projectName=$(sonarProjectName)
+          sonar.projectVersion=$(sonarProjectVersion)
+          sonar.sources=$(Build.SourcesDirectory)/src
+          sonar.java.binaries=$(Build.SourcesDirectory)/target/classes
+
+    - task: SonarQubeAnalyze@5
+
+    - task: SonarQubePublish@5
+      inputs:
+        pollingTimeoutSec: '300'
         
     - task: Docker@2
       displayName: Build and push an image to container registry
@@ -122,3 +149,5 @@ stages:
         kubernetesCluster: 'ForzaCapstoneAKSCluster-java'
         useClusterAdmin: true
         manifests: '$(System.DefaultWorkingDirectory)/Infra-Folder/deployment.yaml'
+        containers: |
+          forzacapstondockerregistryconnection.azurecr.io/azurecapstone:$(tag)
